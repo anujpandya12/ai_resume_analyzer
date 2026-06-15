@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Resume Analyzer</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+
+            font-family:'Poppins', sans-serif;
+
+            background:linear-gradient(
+                135deg,
+                #0f172a,
+                #1e293b
+            );
+
+            color:white;
+
+            padding:40px;
+        }
+
+        .container{
+
+            max-width:1200px;
+            margin:auto;
+        }
+
+        .title{
+
+            text-align:center;
+            margin-bottom:40px;
+        }
+
+        .title h1{
+
+            font-size:42px;
+            margin-bottom:10px;
+        }
+
+        .title p{
+
+            color:#cbd5e1;
+        }
+
+        .grid{
+
+            display:grid;
+
+            grid-template-columns:
+            repeat(auto-fit, minmax(350px, 1fr));
+
+            gap:25px;
+        }
+
+        .card{
+
+            background:rgba(255,255,255,0.08);
+
+            backdrop-filter:blur(10px);
+
+            border:1px solid rgba(255,255,255,0.1);
+
+            border-radius:20px;
+
+            padding:25px;
+
+            transition:0.3s;
+        }
+
+        .card:hover{
+
+            transform:translateY(-5px);
+
+            box-shadow:0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .card h2{
+
+            margin-bottom:20px;
+
+            font-size:22px;
+
+            color:#38bdf8;
+        }
+
+        .score{
+
+            font-size:55px;
+
+            font-weight:bold;
+
+            color:#4ade80;
+
+            text-align:center;
+        }
+
+        ul{
+
+            list-style:none;
+        }
+
+        ul li{
+
+            margin-bottom:12px;
+
+            padding:10px;
+
+            background:rgba(255,255,255,0.05);
+
+            border-radius:10px;
+        }
+
+        .summary{
+
+            line-height:1.8;
+            color:#e2e8f0;
+        }
+
+        .download-btn{
+
+            display:flex;
+            justify-content:center;
+            margin-top:15px;
+        }
+
+        button{
+
+            background:#38bdf8;
+
+            color:white;
+
+            border:none;
+
+            padding:12px 25px;
+
+            border-radius:10px;
+
+            cursor:pointer;
+
+            font-size:16px;
+
+            transition:0.3s;
+        }
+
+        button:hover{
+
+            background:#0ea5e9;
+
+            transform:scale(1.05);
+        }
+
+        .badge{
+
+            display:inline-block;
+
+            background:#22c55e;
+
+            padding:6px 12px;
+
+            border-radius:30px;
+
+            font-size:14px;
+
+            margin-bottom:10px;
+        }
+
+        .fade-in{
+
+            animation:fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn{
+
+            from{
+                opacity:0;
+                transform:translateY(20px);
+            }
+
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="title fade-in">
+
+        <h1>AI Resume Analyzer 🚀</h1>
+
+        <p>
+            Advanced ATS + NLP Resume Analysis System
+        </p>
+
+    </div>
+
+    <div class="grid">
+
+        <!-- ATS Score -->
+
+        <div class="card fade-in">
+
+            <div class="badge">
+                ATS Analysis
+            </div>
+
+            <h2>ATS Score</h2>
+
+            <div class="score">
+                {{ ats_score }}/100
+            </div>
+
+        </div>
+
+<!-- Final Score -->
+
+        <div class="card fade-in">
+
+            <div class="badge">
+                Final Ranking
+            </div>
+
+            <h2>Final Score</h2>
+
+            <div class="score">
+
+                {{ final_score }}%
+
+            </div>
+
+        </div>
+
+        <!-- Job Match -->
+
+        <div class="card fade-in">
+
+            <div class="badge">
+                AI Matching
+            </div>
+
+            <h2>Job Match Score</h2>
+
+            <div class="score">
+                {{ match_score }}%
+            </div>
+
+        </div>
+
+        <!-- Semantic Score -->
+
+        <div class="card fade-in">
+
+            <div class="badge">
+                NLP Engine
+            </div>
+
+            <h2>Semantic Match</h2>
+
+            <div class="score">
+                {{ semantic_score }}%
+            </div>
+
+        </div>
+
+        <!-- Skills -->
+
+        <div class="card fade-in">
+
+            <h2>Detected Skills</h2>
+
+            <ul>
+
+                {% for skill in skills %}
+
+                    <li>
+                        ✔ {{ skill }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <!-- Missing Skills -->
+
+        <div class="card fade-in">
+
+            <h2>Missing Skills</h2>
+
+            <ul>
+
+                {% for skill in missing_skills %}
+
+                    <li>
+                        ✘ {{ skill }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <!-- Resume Feedback -->
+
+        <div class="card fade-in">
+
+            <h2>Resume Feedback</h2>
+
+            <ul>
+
+                {% for item in feedback %}
+
+                    <li>
+                        {{ item }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <!-- AI Suggestions -->
+
+        <div class="card fade-in">
+
+            <h2>AI Suggestions</h2>
+
+            <ul>
+
+                {% for item in ai_feedback %}
+
+                    <li>
+                        {{ item }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <!-- Recommendations -->
+
+        <div class="card fade-in">
+
+            <h2>Smart Recommendations</h2>
+
+            <ul>
+
+                {% for item in recommendations %}
+
+                    <li>
+                        {{ item }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <!-- Interview Questions -->
+
+        <div class="card fade-in">
+
+            <h2>AI Interview Questions</h2>
+
+            <ul>
+
+                {% for question in interview_questions %}
+
+                    <li>
+                        {{ question }}
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <!-- Experience -->
+
+        <div class="card fade-in">
+
+            <h2>Experience Detection</h2>
+
+            <div class="score">
+                {{ experience }}
+            </div>
+
+        </div>
+
+        <!-- AI Summary -->
+
+        <div class="card fade-in">
+
+            <h2>AI Resume Summary</h2>
+
+            <p class="summary">
+
+                {{ resume_summary }}
+
+            </p>
+
+        </div>
+
+        <!-- Download -->
+
+        <div class="card fade-in">
+
+            <h2>Download ATS Report</h2>
+
+            <div class="download-btn">
+
+                <a href="/static/reports/ats_report.pdf" download>
+
+                    <button>
+                        Download PDF
+                    </button>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    // Smooth Card Animation
+
+    const cards = document.querySelectorAll('.card');
+
+    cards.forEach((card, index) => {
+
+        card.style.animationDelay =
+        `${index * 0.1}s`;
+
+    });
+
+</script>
+
+</body>
+</html>

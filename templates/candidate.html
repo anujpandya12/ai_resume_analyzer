@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Candidate Profile</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            background:#0f172a;
+            color:white;
+            padding:40px;
+        }
+
+        .card{
+
+            max-width:800px;
+            margin:auto;
+
+            background:#1e293b;
+
+            padding:30px;
+
+            border-radius:20px;
+        }
+
+        h1{
+            margin-bottom:30px;
+        }
+
+        .row{
+            margin-bottom:15px;
+        }
+
+        .label{
+            color:#38bdf8;
+            font-weight:bold;
+        }
+    
+    
+    .status-badge{
+
+    background:#22c55e;
+
+    color:white;
+
+    padding:8px 15px;
+
+    border-radius:20px;
+
+    font-weight:bold;
+
+    margin-left:10px;
+}
+
+.status-select{
+
+    width:100%;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    margin-bottom:15px;
+
+    font-size:15px;
+}
+
+.update-btn{
+
+    width:100%;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#38bdf8;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+}
+
+.update-btn:hover{
+
+    background:#0ea5e9;
+}
+    </style>
+
+</head>
+<body>
+
+
+<div class="card">
+
+    <h1>
+        Candidate Profile
+    </h1>
+
+    <div class="row">
+        <span class="label">Candidate ID:</span>
+        {{ candidate.id }}
+    </div>
+
+    <div class="row">
+        <span class="label">ATS Score:</span>
+        {{ candidate.ats_score }}%
+    </div>
+
+    <div class="row">
+        <span class="label">Match Score:</span>
+        {{ candidate.match_score }}%
+    </div>
+
+    <div class="row">
+        <span class="label">Final Score:</span>
+        {{ candidate.final_score }}
+    </div>
+
+    <div class="row">
+        <span class="label">Skills:</span>
+        {{ candidate.skills }}
+    </div>
+
+    <div class="row">
+        <span class="label">Experience:</span>
+        {{ candidate.experience }}
+    </div>
+
+    <div class="row">
+        <span class="label">Applied Date:</span>
+        {{ candidate.created_at }}
+    </div>
+        <div class="row">
+        <span class="label">Name:</span>
+        {{ candidate.name }}
+    </div>
+
+    <div class="row">
+        <span class="label">Email:</span>
+        {{ candidate.email }}
+    </div>
+
+    <div class="row">
+        <span class="label">Mobile:</span>
+        {{ candidate.mobile }}
+    </div>
+
+    <div class="row">
+        <span class="label">Address:</span>
+        {{ candidate.address }}
+    </div>
+<div class="row">
+
+    <span class="label">Current Status:</span>
+
+    <span class="status-badge">
+        {{ candidate.status }}
+    </span>
+
+</div>
+
+<br>
+
+<form action="/update-status/{{ candidate.id }}"
+      method="POST">
+
+    <label class="label">
+        Update Candidate Status
+    </label>
+
+    <br><br>
+
+    <select name="status" class="status-select">
+
+        <option value="Applied">📄 Applied</option>
+
+        <option value="Shortlisted">⭐ Shortlisted</option>
+
+        <option value="Interview Scheduled">📅 Interview Scheduled</option>
+
+        <option value="Selected">✅ Selected</option>
+
+        <option value="Rejected">❌ Rejected</option>
+
+    </select>
+
+    <button type="submit" class="update-btn">
+
+        Update Status
+
+    </button>
+
+</form>
+
+
+<hr><br>
+
+<h3>📅 Interview Scheduling</h3>
+
+<form action="/schedule_interview/{{ candidate.id }}"
+      method="POST">
+
+    <label>Interview Date</label>
+    <br>
+    <input type="date"
+           name="interview_date">
+
+    <br><br>
+
+    <label>Interview Time</label>
+    <br>
+    <input type="time"
+           name="interview_time">
+
+    <br><br>
+
+    <label>Interview Round</label>
+    <br>
+    <input type="text"
+           name="interview_round"
+           placeholder="Technical Round">
+
+    <br><br>
+
+    <button type="submit"
+            class="update-btn">
+
+        Schedule Interview
+
+    </button>
+
+</form>
+
+
+<hr><br>
+
+<h3>Recruiter Notes</h3>
+
+<form action="/update-notes/{{ candidate.id }}"
+      method="POST">
+
+    <textarea
+        name="notes"
+        rows="5"
+        style="
+            width:100%;
+            padding:15px;
+            border-radius:10px;
+            margin-top:10px;
+        "
+    >{{ candidate.notes }}</textarea>
+
+    <br><br>
+
+    <button
+        type="submit"
+        class="update-btn">
+
+        Save Notes
+
+    </button>
+
+</form>
+
+<hr><br>
+
+<div class="row">
+    <span class="label">Interview Date:</span>
+    {{ candidate.interview_date }}
+</div>
+
+<div class="row">
+    <span class="label">Interview Time:</span>
+    {{ candidate.interview_time }}
+</div>
+
+<div class="row">
+    <span class="label">Interview Round:</span>
+    {{ candidate.interview_round }}
+</div>
+
+<br>
+<a href="/send_interview_email/{{ candidate.id }}"
+   style="
+   background:#22c55e;
+   color:white;
+   padding:12px 20px;
+   border-radius:10px;
+   text-decoration:none;
+   ">
+   📧 Send Interview Email
+</a>
+
+<a href="/dashboard"
+    style="
+    background:#22c55e;
+    color:white;
+    padding:12px 20px;
+    border-radius:10px;
+    text-decoration:none;
+    ">
+    ← Back To Dashboard
+</a>
+
+</div>
+
+</body>
+</html>
