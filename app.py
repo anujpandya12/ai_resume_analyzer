@@ -23,6 +23,7 @@ from flask import Flask, render_template, request, redirect, session
 from models import db, Candidate
 from datetime import datetime
 from flask_mail import Mail, Message
+from flask import send_from_directory
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -212,6 +213,20 @@ def update_status(id):
     db.session.commit()
 
     return redirect(f"/candidate/{id}")
+
+#======================================================
+@app.route('/download_resume/<int:id>')
+def download_resume(id):
+
+    candidate = Candidate.query.get_or_404(id)
+
+    return send_from_directory(
+
+        app.config['UPLOAD_FOLDER'],
+        candidate.resume_file,
+        as_attachment=True
+
+    )
 
 #=======================================================
 
@@ -412,6 +427,7 @@ def upload_resume():
         name=name,
         email=email,
         mobile=mobile,
+        resume_file=file.filename,
         address=request.form.get("address"),
         ats_score=ats_score,
         match_score=match_score,

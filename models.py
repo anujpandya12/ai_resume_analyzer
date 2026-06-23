@@ -66,3 +66,6 @@ class Candidate(db.Model):
         db.Text,
         default=""
     )
+    resume_file = db.Column(
+     db.String(255)
+    )   
