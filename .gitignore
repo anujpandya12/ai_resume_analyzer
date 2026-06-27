@@ -3,4 +3,4 @@ __pycache__/
 instance/
 uploads/
 *.pyc
-static/reports/
+static/reports/ats_report.pdf
