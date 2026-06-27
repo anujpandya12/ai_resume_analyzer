@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Candidate Pipeline</title>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+
+background:#0f172a;
+color:white;
+padding:30px;
+
+}
+
+.back{
+
+display:inline-block;
+margin-bottom:25px;
+color:white;
+text-decoration:none;
+font-size:18px;
+
+}
+
+h1{
+
+text-align:center;
+margin-bottom:30px;
+color:#38bdf8;
+
+}
+
+.board{
+
+display:flex;
+gap:20px;
+overflow-x:auto;
+align-items:flex-start;
+
+}
+
+.column{
+
+background:#1e293b;
+width:280px;
+border-radius:15px;
+padding:15px;
+flex-shrink:0;
+
+}
+
+.column h2{
+
+text-align:center;
+margin-bottom:15px;
+
+}
+
+.count{
+
+background:#38bdf8;
+padding:5px 12px;
+border-radius:20px;
+font-size:13px;
+
+}
+
+.candidate-list{
+
+min-height:500px;
+
+}
+
+.candidate{
+
+background:#334155;
+padding:15px;
+border-radius:12px;
+margin-bottom:15px;
+cursor:grab;
+
+}
+
+.candidate:hover{
+
+transform:translateY(-3px);
+
+}
+
+.candidate h3{
+
+color:#38bdf8;
+margin-bottom:8px;
+
+}
+
+.candidate p{
+
+margin:5px 0;
+font-size:14px;
+
+}
+
+.btn{
+
+display:block;
+margin-top:10px;
+text-align:center;
+background:#38bdf8;
+padding:10px;
+border-radius:10px;
+color:white;
+text-decoration:none;
+
+}
+
+.sortable-ghost{
+
+opacity:.4;
+
+}
+
+.sortable-chosen{
+
+background:#2563eb;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<a href="/dashboard" class="back">
+⬅ Back To Dashboard
+</a>
+
+<h1>📋 Recruitment Pipeline</h1>
+
+<div class="board">
+
+<!-- Applied -->
+
+<div class="column" data-status="Applied">
+
+<h2>
+
+📄 Applied
+
+<span class="count">
+
+{{ applied|length }}
+
+</span>
+
+</h2>
+
+<div class="candidate-list">
+
+{% for candidate in applied %}
+
+<div class="candidate"
+
+data-id="{{ candidate.id }}">
+
+<h3>{{ candidate.name }}</h3>
+
+<p><b>Score:</b> {{ candidate.final_score }}</p>
+
+<p>{{ candidate.skills }}</p>
+
+<a href="/candidate/{{ candidate.id }}"
+class="btn">
+
+View Profile
+
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+<!-- Shortlisted -->
+
+<div class="column" data-status="Shortlisted">
+
+<h2>
+
+⭐ Shortlisted
+
+<span class="count">
+
+{{ shortlisted|length }}
+
+</span>
+
+</h2>
+
+<div class="candidate-list">
+
+{% for candidate in shortlisted %}
+
+<div class="candidate"
+     data-id="{{ candidate.id }}">
+
+<h3>{{ candidate.name }}</h3>
+
+<p><b>Score:</b> {{ candidate.final_score }}</p>
+
+<p>{{ candidate.skills }}</p>
+
+<a href="/candidate/{{ candidate.id }}"
+class="btn">
+
+View Profile
+
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+<!-- Interview -->
+
+<div class="column" data-status="Interview Scheduled">
+
+<h2>
+
+📅 Interview
+
+<span class="count">
+
+{{ interview|length }}
+
+</span>
+
+</h2>
+
+<div class="candidate-list">
+
+{% for candidate in interview %}
+
+<div class="candidate"
+     data-id="{{ candidate.id }}">
+
+<h3>{{ candidate.name }}</h3>
+
+<p>{{ candidate.interview_date }}</p>
+
+<p>{{ candidate.interview_time }}</p>
+
+<p>{{ candidate.interview_round }}</p>
+
+<a href="/candidate/{{ candidate.id }}"
+class="btn">
+
+View Profile
+
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+<!-- Selected -->
+
+<div class="column" data-status="Selected">
+
+<h2>
+
+✅ Selected
+
+<span class="count">
+
+{{ selected|length }}
+
+</span>
+
+</h2>
+
+<div class="candidate-list">
+
+{% for candidate in selected %}
+
+<div class="candidate"
+     data-id="{{ candidate.id }}">
+
+<h3>{{ candidate.name }}</h3>
+
+<p><b>Score:</b> {{ candidate.final_score }}</p>
+
+<a href="/candidate/{{ candidate.id }}"
+class="btn">
+
+View Profile
+
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+<!-- Rejected -->
+
+<div class="column" data-status="Rejected">
+
+<h2>
+
+❌ Rejected
+
+<span class="count">
+
+{{ rejected|length }}
+
+</span>
+
+</h2>
+
+<div class="candidate-list">
+
+{% for candidate in rejected %}
+
+<div class="candidate"
+     data-id="{{ candidate.id }}">
+
+<h3>{{ candidate.name }}</h3>
+
+<p>{{ candidate.skills }}</p>
+
+<a href="/candidate/{{ candidate.id }}"
+class="btn">
+
+View Profile
+
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+document.querySelectorAll(".candidate-list").forEach(list=>{
+
+    new Sortable(list,{
+
+        group:"pipeline",
+
+        animation:250,
+
+        ghostClass:"sortable-ghost",
+
+        chosenClass:"sortable-chosen",
+
+        onEnd:function(evt){
+
+            let id = evt.item.dataset.id;
+
+            let status = evt.to.parentElement.dataset.status;
+
+            console.log("Candidate ID =",id);
+
+            console.log("New Status =",status);
+
+            fetch("/move_candidate",{
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+
+                    id:id,
+
+                    status:status
+
+                })
+
+            })
+
+            .then(res=>res.json())
+
+            .then(data=>{
+
+                console.log(data);
+
+            })
+
+            .catch(err=>{
+
+                console.log(err);
+
+            });
+
+        }
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>

@@ -23,6 +23,7 @@ from flask import Flask, render_template, request, redirect, session
 from models import db, Candidate
 from datetime import datetime
 from flask_mail import Mail, Message
+from flask import jsonify
 from flask import send_from_directory
 from dotenv import load_dotenv
 load_dotenv()
@@ -228,6 +229,47 @@ def download_resume(id):
 
     )
 
+@app.route("/move_candidate", methods=["POST"])
+def move_candidate():
+
+    data = request.get_json()
+
+    print(data)
+
+    return "OK"
+
+    candidate = Candidate.query.get(data["id"])
+
+    candidate.status = data["status"]
+
+    db.session.commit()
+
+    return jsonify({
+        "success": True
+    })
+
+#==========================================================
+
+@app.route('/pipeline')
+def pipeline():
+
+    if not session.get("admin"):
+        return redirect("/login")
+
+    applied = Candidate.query.filter_by(status="Applied").all()
+    shortlisted = Candidate.query.filter_by(status="Shortlisted").all()
+    interview = Candidate.query.filter_by(status="Interview Scheduled").all()
+    selected = Candidate.query.filter_by(status="Selected").all()
+    rejected = Candidate.query.filter_by(status="Rejected").all()
+
+    return render_template(
+        "pipeline.html",
+        applied=applied,
+        shortlisted=shortlisted,
+        interview=interview,
+        selected=selected,
+        rejected=rejected
+    )
 #=======================================================
 
 @app.route('/send_interview_email/<int:id>')
